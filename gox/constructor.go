@@ -9,30 +9,23 @@ const NodeText = "gox$text"
 
 type TreeNode interface {
 	isTreeNode()
-	isTreeChild()
 }
 
 type TreeElement struct {
 	Type     string
 	Props    map[string]interface{}
-	Children []TreeChild
+	Children []TreeNode
 }
 
-func (TreeElement) isTreeNode()  {}
-func (TreeElement) isTreeChild() {}
-
-type TreeChild interface {
-	isTreeChild()
-}
+func (TreeElement) isTreeNode() {}
 
 type TreeTextNode struct {
 	Text string
 }
 
-func (TreeTextNode) isTreeNode()  {}
-func (TreeTextNode) isTreeChild() {}
+func (TreeTextNode) isTreeNode() {}
 
-func Render(c context.Context, elm Element) TreeNode {
+func RenderTree(c context.Context, elm Element) TreeNode {
 	ctx := WithContext(c)
 
 	return elm.render(ctx)
@@ -49,8 +42,8 @@ func (n primNode) render(ctx Context) TreeNode {
 	}
 }
 
-func (c Children) render(ctx Context) []TreeChild {
-	children := make([]TreeChild, len(c))
+func (c Children) render(ctx Context) []TreeNode {
+	children := make([]TreeNode, len(c))
 	for i, child := range c {
 		children[i] = child.render(ctx)
 	}
